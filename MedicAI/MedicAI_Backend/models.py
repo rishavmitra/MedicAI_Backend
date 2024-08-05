@@ -3,4 +3,4 @@ from db_connections import db
 
 # Create your models here.
 
-test_collection = db['Test']
+user_data_collection = db['User_Metadata']
