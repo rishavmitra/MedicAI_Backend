@@ -1,0 +1,35 @@
+.sidebar {
+  position: fixed;
+  top: 60px; 
+  left: -100%;
+  width: 250px; 
+  color: rgb(6, 6, 10);
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  overflow-y: auto; 
+  height: calc(100% - 60px);
+  background-color: #fcf6fd;
+  transition: left 1.2s ease; /* Transition for smooth opening/closing */
+}
+
+.sidebar.open {
+  left: 0;
+}
+
+.sidebar h2 {
+  margin-top: 0;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  margin: 15px 0;
+}
+
+.sidebar ul li a {
+  color: rgb(7, 6, 6);
+  text-decoration: none;
+}

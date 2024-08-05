@@ -1,0 +1,23 @@
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Prevent scrollbars */
+  font-family: 'Roboto', sans-serif;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.main-content {
+  display: flex;
+  flex: 1;
+  transition: margin-left 0.3s ease; /* Transition for smooth opening/closing */
+}
+
+.sidebar-open .main-content {
+  margin-left: 250px; /* Adjust based on the width of your sidebar */
+}

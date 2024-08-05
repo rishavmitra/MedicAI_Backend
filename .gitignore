@@ -4,3 +4,6 @@ MedicAI/.venv
 MedicAI/MedicAI_Backend/db_service/__pycache__
 MedicAI/MedicAI_Backend/__pycache__
 MedicAI/__pycache__
+
+MedicAI_Backend\FrontEndProject\my-app\node_modules
+MedicAI_Backend\FrontEndProject\.vscode
