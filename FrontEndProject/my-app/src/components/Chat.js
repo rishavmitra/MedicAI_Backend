@@ -9,6 +9,7 @@ const Chat = () => {
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [showUploadButton, setShowUploadButton] = useState(true);
   const [uploadingFile, setUploadingFile] = useState(null); // Store the file being uploaded
+  const [uploadIconVisible, setUploadIconVisible] = useState(false); // New state for upload icon visibility
   const messageListRef = useRef(null);
 
   const handleSend = () => {
@@ -57,7 +58,9 @@ const Chat = () => {
         if (data.Response) {
           console.log('Success:', data);
           setUploadSuccess(true);
-        } else {
+          setUploadIconVisible(true); // Show the additional upload icon
+        } 
+        else {
           alert(data.Message || 'Failed to upload document. Please try again.');
           setUploadSuccess(false);
         }
@@ -85,6 +88,10 @@ const Chat = () => {
     setShowUploadButton(false);
   };
 
+  const handleUploadNew = () => {
+    document.getElementById('file-input').click();
+  };
+
   return (
     <div className="chat">
       <div className="message-list" ref={messageListRef}>
@@ -103,6 +110,17 @@ const Chat = () => {
           <button className="send-button" onClick={handleSend}>
             <img src="/send-icon.png" alt="Send" />
           </button>
+          {uploadIconVisible && (
+            <button className="upload-new-button" onClick={handleUploadNew}>
+              <img src="/upload-icon.png" alt="Upload New" />
+            </button>
+          )}
+          <input
+              type="file"
+              id="file-input"
+              style={{ display: 'none' }}
+              onChange={handleUpload}
+            />
         </div>
         {showUploadButton && !uploadSuccess && (
           <div className={`upload-container ${messages.length ? 'chat-active' : ''}`}>
