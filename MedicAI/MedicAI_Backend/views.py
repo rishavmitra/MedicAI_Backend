@@ -8,8 +8,9 @@ from .db_service import db_helper
 @api_view(['POST'])
 def upload_report(request):
     File = request.FILES['File']
+    UserId = request.data['UserId']
     
-    response = db_helper.upload_document(File)
+    response = db_helper.upload_document(UserId, File)
 
 
     return Response(response)
