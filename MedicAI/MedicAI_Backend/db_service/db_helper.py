@@ -1,20 +1,21 @@
 import gridfs
 from db_connections import db
-from ..models import user_data_collection,user_table
+from ..models import user_data_collection,user_table,user_chats
 
 
 def user_data(**kwargs):
+    data = user_table.count_documents({"UserID":kwargs["UserId"]})
+
+    if data == 0:
+        record = {"UserID":kwargs["UserId"]}
+        user_table.insert_one(record)
+
     if "file_object_id" in kwargs:
-
-        data = user_table.find({"UserID":kwargs["UserId"]})
-
-        if data.retrieved == 0:
-            record = {"UserID":kwargs["UserId"]}
-            user_table.insert_one(record)
 
         record = {"UserID":kwargs["UserId"],"file_object_id":kwargs["file_object_id"]}
 
         res = user_data_collection.insert_one(record)
+
 
 def upload_document(UserId,file):
     try:
@@ -36,3 +37,10 @@ def upload_document(UserId,file):
     # output.write(outputdata)
     # output.close()
 
+def upload_chat(user_id,user_message, system_message, timestamp):
+
+    user_data(UserId=user_id)
+    record = {'UserID':user_id,'UserMessage':user_message,'SystemMessage':system_message,'timestamp':timestamp}
+    user_chats.insert_one(record)
+
+    return {'Response':True,'Message':'Message stored successfully'}

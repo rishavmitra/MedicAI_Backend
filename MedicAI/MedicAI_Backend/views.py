@@ -14,3 +14,18 @@ def upload_report(request):
 
 
     return Response(response)
+
+@api_view(['POST'])
+def chat_interact(request):
+    user_message = request.data['Message']
+    UserId = request.data['UserId']
+    TimeStamp = 'Dummy'
+
+    #______Code for openai_______#
+
+    SystemMessage = 'Dummy'
+    response = db_helper.upload_chat(UserId,user_message,SystemMessage,TimeStamp)
+    response.update({"SystemMessage":SystemMessage})
+
+    return Response(response)
+
