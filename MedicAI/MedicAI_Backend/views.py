@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .db_service import db_helper
+from .ml_service import chat_service
 
 # Create your views here.
 
@@ -19,11 +20,11 @@ def upload_report(request):
 def chat_interact(request):
     user_message = request.data['Message']
     UserId = request.data['UserId']
-    TimeStamp = 'Dummy'
+    TimeStamp = request.data['TimeStamp']
 
     #______Code for openai_______#
+    SystemMessage = chat_service.Call_OpenAI(user_message)
 
-    SystemMessage = 'Dummy'
     response = db_helper.upload_chat(UserId,user_message,SystemMessage,TimeStamp)
     response.update({"SystemMessage":SystemMessage})
 

@@ -1,4 +1,5 @@
 MedicAI/.venv
+MedicAI/.env
 
 
 MedicAI/MedicAI_Backend/db_service/__pycache__
