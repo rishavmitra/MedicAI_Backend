@@ -6,3 +6,5 @@ user_table = db['User_Table']
 user_data_collection = db['User_Metadata']
 
 user_chats = db['User_Chats']
+
+session_ids = db['Session_ID']
