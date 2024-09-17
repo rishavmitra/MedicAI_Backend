@@ -1,14 +1,20 @@
 import gridfs
+import io
+import fitz
 from db_connections import db
-from ..models import user_data_collection,user_table,user_chats,session_ids
-
+from ..models import user_data_collection,user_table,user_chats,session_id
 
 def user_data(**kwargs):
     data = user_table.count_documents({"UserID":kwargs["UserId"]})
+    sess_data = session_id.count_documents({"UserID":kwargs["UserId"],"SessionId":kwargs["SessionId"]})
 
     if data == 0:
-        record = {"UserID":kwargs["UserId"],"SessionId":kwargs["SessionId"]}
+        record = {"UserID":kwargs["UserId"]}
         user_table.insert_one(record)
+
+    if "SessionId" in kwargs and "file_object_id" not in kwargs and sess_data == 0:
+        record = {"UserID":kwargs["UserId"],"SessionId":kwargs["SessionId"]}
+        session_id.insert_one(record)
 
     if "file_object_id" in kwargs:
 
@@ -17,9 +23,28 @@ def user_data(**kwargs):
         res = user_data_collection.insert_one(record)
 
    
-def upload_document(UserId,file,SessionId):
+def upload_document(UserId,file,SessionId,document_obj):
     try:
+        text = ''
         data = file.read()
+
+        pdf_stream = io.BytesIO(data)
+
+        # Open the PDF from the stream
+        doc = fitz.open(stream=pdf_stream, filetype="pdf")
+
+        # Extract and print text from each page
+        for page_num in range(doc.page_count):
+            page = doc.load_page(page_num)
+            text1 = page.get_text("text")  # Extract text in readable format
+            text += text1
+
+        # Close the document
+        doc.close()
+
+        document_obj.insert_context(text)
+
+
         fs = gridfs.GridFS(db)
 
         file_object_id = fs.put(data,filename=file.name)
@@ -39,15 +64,13 @@ def upload_document(UserId,file,SessionId):
 
 def upload_chat(user_id,user_message, system_message, timestamp,session_id):
 
-    user_data(UserId=user_id)
+    user_data(UserId=user_id,SessionId=session_id)
     record = {'UserID':user_id,'UserMessage':user_message,'SystemMessage':system_message,'timestamp':timestamp,'SessionId':session_id}
     user_chats.insert_one(record)
 
     return {'Response':True,'Message':'Message stored successfully'}
 
 def upload_sessions(session_id,user_id):
-    user_data(UserId=user_id)
-    record = {'SessionId':session_id,'UserID':user_id}
-    session_ids.insert_one(record)
+    # user_data(UserId=user_id,SessionId = session_id) # Code not fixed yet
 
     return {'Response':True,'Message':'Session Stored Succesfully'}
