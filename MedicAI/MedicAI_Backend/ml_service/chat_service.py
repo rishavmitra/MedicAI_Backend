@@ -20,12 +20,17 @@ def Call_OpenAI(message,document_info_class):
         body = PROMPTS["Medic_Prompt"].replace("<<Context>>",document_info_class.context).replace("<<Question>>",message)
         instruction = PROMPTS["System_Prompt"]
 
-        message = body +" "+instruction
+        message = PROMPTS["Thought_Process"]+" "+body
     
-    response = openai.chat.completions.create(
-        model="gpt-4o", #"gpt-3.5-turbo",
-        messages=[{"role": "user", "content": message}]
-    )
+        response = openai.chat.completions.create(
+            model="gpt-4o", #"gpt-3.5-turbo",
+            messages=[{"role": "system", "content": instruction},{"role": "user", "content": message}]
+        )
+    else:
+        response = openai.chat.completions.create(
+            model="gpt-4o", #"gpt-3.5-turbo",
+            messages=[{"role": "user", "content": message}]
+        )
 
     # print(response.choices[0].message.content)
 

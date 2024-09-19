@@ -62,10 +62,10 @@ def upload_document(UserId,file,SessionId,document_obj):
     # output.write(outputdata)
     # output.close()
 
-def upload_chat(user_id,user_message, system_message, timestamp,session_id):
+def upload_chat(user_id,user_message, system_message, timestamp,session_id,SerialNum):
 
     user_data(UserId=user_id,SessionId=session_id)
-    record = {'UserID':user_id,'UserMessage':user_message,'SystemMessage':system_message,'timestamp':timestamp,'SessionId':session_id}
+    record = {'UserID':user_id,'UserMessage':user_message,'SystemMessage':system_message,'timestamp':timestamp,'SessionId':session_id,'SerialNum':SerialNum}
     user_chats.insert_one(record)
 
     return {'Response':True,'Message':'Message stored successfully'}

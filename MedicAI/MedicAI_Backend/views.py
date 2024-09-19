@@ -30,11 +30,12 @@ def chat_interact(request):
     UserId = request.data['UserId']
     TimeStamp = request.data['TimeStamp']
     SessionId=request.data['SessionId']
+    SerialNum = request.data['SerialNum']
 
     #______Code for openai_______#
     SystemMessage = chat_service.Call_OpenAI(user_message,document_info_class)
 
-    response = db_helper.upload_chat(UserId,user_message,SystemMessage,TimeStamp,SessionId)
+    response = db_helper.upload_chat(UserId,user_message,SystemMessage,TimeStamp,SessionId,SerialNum)
     response.update({"SystemMessage":SystemMessage})
 
     return Response(response)
