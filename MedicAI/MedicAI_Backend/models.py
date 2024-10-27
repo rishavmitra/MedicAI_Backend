@@ -7,4 +7,4 @@ user_data_collection = db['User_Metadata']
 
 user_chats = db['User_Chats']
 
-session_id = db['Session_Id']
+sessions= db['Session_Id']
