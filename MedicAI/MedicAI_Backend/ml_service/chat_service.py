@@ -20,7 +20,9 @@ def Call_OpenAI(message,document_info_class):
         body = PROMPTS["Medic_Prompt"].replace("<<Context>>",document_info_class.context).replace("<<Question>>",message)
         instruction = PROMPTS["System_Prompt"]
 
-        message = PROMPTS["Thought_Process"]+" "+body
+        # message = PROMPTS["Thought_Process"]+" "+body
+
+        message = body
     
         response = openai.chat.completions.create(
             model="gpt-4o", #"gpt-3.5-turbo",
