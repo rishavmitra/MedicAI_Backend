@@ -7,5 +7,6 @@ urlpatterns = [
     path('session-start/',views.session_start),
     path('fetch-sessions/',views.fetch_sessions),
     path('fetch-chats/',views.fetch_chats),
-    path('delete-session/',views.delete_session)
+    path('delete-session/',views.delete_session),
+    path('generate-summary/',views.generate_summary)
 ]

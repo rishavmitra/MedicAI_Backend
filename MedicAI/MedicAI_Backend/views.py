@@ -86,8 +86,6 @@ def fetch_sessions(request):
 def fetch_chats(request):
     session_id = request.data.get('sessionId')
     chats=db_helper.get_chats(session_id)
-    
-    print(chats)
     response_data = []
     for chat in chats:
         try:
@@ -129,4 +127,35 @@ def delete_session(request):
 
     except Exception as e:
         print(f"Error occurred: {str(e)}")  # Debug the error
+        return Response({"error": str(e)}, status=500)
+
+
+@api_view(['POST'])
+def generate_summary(request):
+    # Get the SessionId from the request
+    session_id = request.data.get('SessionId')
+
+    if not session_id:
+        return Response({"error": "SessionId is required."}, status=400)
+
+    # Fetch chats using db_helper instead of calling fetch_chats
+    chats = db_helper.get_chats(session_id)
+    print(chats)
+    
+    if not chats:
+        return Response({"error": "No chats found for this session."}, status=404)
+
+    # Combine user messages for summarization
+    user_messages = [chat['UserMessage'] for chat in chats if chat['UserMessage']]
+    system_messages = [chat['SystemMessage'] for chat in chats if chat['SystemMessage']]
+    user_message_combined = ' '.join(user_messages)
+    messages_combined= ' '.join(user_message_combined)
+    print(messages_combined)
+
+    # Call the OpenAI service for summarization using GPT-4
+    try:
+        summary = chat_service.Call_OpenAISummary(messages_combined, model="gpt-4")
+        print(summary)
+        return Response({"summary": summary}, status=200)
+    except Exception as e:
         return Response({"error": str(e)}, status=500)
