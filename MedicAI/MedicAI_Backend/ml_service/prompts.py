@@ -48,5 +48,12 @@ Here is the question:
 
 
 Answer the question on the basis of the context provided.
+""",
+    "Chat_Summarization_Prompt": """
+Summarize the following chat in 5-8 words:
+
+<<Chat Conversation>>
+
+Keep the summary concise, and use simple language that is easy for a patient to understand. Avoid using jargon or overly complex terms.
 """
 }
