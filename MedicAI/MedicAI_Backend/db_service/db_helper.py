@@ -63,6 +63,34 @@ def upload_document(UserId,file,SessionId,document_obj):
     # output.write(outputdata)
     # output.close()
 
+def download_document(file_id,document_obj):
+    try:
+        fs = gridfs.GridFS(db)
+
+        outputData = fs.get(file_id).read()
+
+        pdf_stream = io.BytesIO(outputData)
+
+        # Open the PDF from the stream
+        doc = fitz.open(stream=pdf_stream, filetype="pdf")
+
+        text = ""
+        # Extract and print text from each page
+        for page_num in range(doc.page_count):
+            page = doc.load_page(page_num)
+            text1 = page.get_text("text")  # Extract text in readable format
+            text += text1
+
+        # Close the document
+        doc.close()
+
+        document_obj.insert_context(text)
+
+        return {'Response': True,'Message':'Download document successful'}
+    except Exception as e:
+        return {'Response': False,'Message':'Download document failed'}
+
+
 def upload_chat(user_id,user_message, system_message, timestamp,session_id,SerialNum):
 
     user_data(UserId=user_id,SessionId=session_id,timestamp=timestamp)
@@ -99,7 +127,14 @@ def get_sessions(user_id):
 def get_chats(session_id):
     # Fetch chats for the specific session_id
     chats = user_chats.find({"SessionId": session_id})
-    return list(chats)
+
+    file_id = user_data_collection.find({"SessionId":session_id})
+    files = []
+
+    for file in file_id:
+        files.append(file["file_object_id"])
+
+    return list(chats),files
 
 
 

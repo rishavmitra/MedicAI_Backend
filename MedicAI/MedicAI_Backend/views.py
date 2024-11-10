@@ -85,9 +85,18 @@ def fetch_sessions(request):
 @api_view(['POST'])
 def fetch_chats(request):
     session_id = request.data.get('sessionId')
-    chats=db_helper.get_chats(session_id)
+    chats, files =db_helper.get_chats(session_id)
+
+    document_obj = document_information()
+
+    if len(files)>0:
+        file_id = files[-1]
+        db_helper.download_document(file_id=file_id,document_obj=document_obj)
+
+        global document_info_class
+        document_info_class = document_obj
     
-    print(chats)
+    # print(chats)
     response_data = []
     for chat in chats:
         try:
@@ -99,8 +108,9 @@ def fetch_chats(request):
             'UserMessage': chat['UserMessage'],
             'SystemMessage': chat['SystemMessage'],
             'timestamp': chat['timestamp'],
-            'SerialNum' : chat['SerialNum'] 
+            'SerialNum' : chat['SerialNum']
         })
+    
 
     return Response({'chats': response_data})
 
